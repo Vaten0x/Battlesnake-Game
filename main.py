@@ -170,9 +170,9 @@ def move(game_state: typing.Dict) -> typing.Dict:
           "y"]:
 
         #testing
-        print(opponent_body)
-        print(my_head["x"])
-        print(my_head["y"])
+        #print(opponent_body)
+        #print(my_head["x"])
+        #print(my_head["y"])
 
         #checks if the opponent's body is on the left side of the head
         if body_on_left == opponent_body["x"] and my_head[
@@ -271,143 +271,84 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
     print("No safe moves detected! Moving in risky move")
 
-    #Here we turn all the safe moves off since we don't have a good choice, so we turn off the maximizing move strategy for loop, so we can make a risky move to still go on rather than making a one bad move (just going down won't help) This turns on all of the expected head collisions is_move_safe back to true again.
+    #Here we turn all the safe moves off since we don't have a good choice, so we turn off the maximizing move strategy for loop, so we can make a risky move to still go on rather than making a one bad move (just going down won't help) This turns on all of the expected head collisions is_move_safe back to true again. So it reverts all calculations of potential solution.
+
+    #set back to True for all boolean again
+    is_move_safe = {"up": True, "down": True, "left": True, "right": True}
+
+    #same code for not making it go backward
+    if my_neck["x"] < my_head["x"]:
+      is_move_safe["left"] = False
+    elif my_neck["x"] > my_head["x"]:
+      is_move_safe["right"] = False
+    elif my_neck["y"] < my_head["y"]:
+      is_move_safe["down"] = False
+    elif my_neck["y"] > my_head["y"]:
+      is_move_safe["up"] = False
+
+    #check if it's near a wall again
+    if my_head["x"] == 0:
+      is_move_safe["left"] = False
+    if my_head["x"] == board_width:
+      is_move_safe["right"] = False
+    if my_head["y"] == board_height:
+      is_move_safe["up"] = False
+    if my_head["y"] == 0:
+      is_move_safe["down"] = False
+    if my_head["x"] == 0 and my_head["y"] == 0:
+      is_move_safe["left"] = False
+      is_move_safe["down"] = False
+    if my_head["x"] == 0 and my_head["y"] == board_height:
+      is_move_safe["left"] = False
+      is_move_safe["up"] = False
+    if my_head["x"] == board_width and my_head["y"] == board_height:
+      is_move_safe["right"] = False
+      is_move_safe["up"] = False
+    if my_head["x"] == board_width and my_head["y"] == board_height:
+      is_move_safe["right"] = False
+      is_move_safe["down"] = False
+
+    #check for near own body segments again
+    for body in my_body:
+      if body_on_left == body["x"] and my_head["y"] == body["y"]:
+        is_move_safe["left"] = False
+      if body_on_right == body["x"] and my_head["y"] == body["y"]:
+        is_move_safe["right"] = False
+      if my_head["x"] == body["x"] and body_on_top == body["y"]:
+        is_move_safe["up"] = False
+      if my_head["x"] == body["x"] and body_on_bottom == body["y"]:
+        is_move_safe["down"] = False
+
+    #check for nearby opponent's body segments/head again, you don't make predictions this time
     for avoid_others in opponents:
-
       for opponent_body in avoid_others['body']:
-
-        #this is to avoid head to head collisions with other snakes
         opponent_head = avoid_others['head']
-
-        if expect_opponent_head_left == opponent_head["x"] and my_head[
-            "y"] == opponent_head["y"]:
-
-          is_move_safe["left"] = True
-
-          if my_neck["x"] < my_head["x"]:
-            is_move_safe["left"] = False
-          elif my_neck["x"] > my_head["x"]:
-            is_move_safe["right"] = False
-          elif my_neck["y"] < my_head["y"]:
-            is_move_safe["down"] = False
-          elif my_neck["y"] > my_head["y"]:
-            is_move_safe["up"] = False
-
-        if body_on_left == opponent_body["x"] and my_head[
-            "y"] == opponent_body["y"]:
-          is_move_safe["left"] = False
-
-        if body_on_right == opponent_body["x"] and my_head[
-            "y"] == opponent_body["y"]:
-          is_move_safe["right"] = False
-
-        if my_head["x"] == opponent_body["x"] and body_on_top == opponent_body[
+        if opponent_head["x"] != my_head["x"] or opponent_head["y"] != my_head[
             "y"]:
-          is_move_safe["up"] = False
-
-        if my_head["x"] == opponent_body[
-            "x"] and body_on_bottom == opponent_body["y"]:
-          is_move_safe["down"] = False
-
-        if expect_opponent_head_right == opponent_head["x"] and my_head[
-            "y"] == opponent_head["y"]:
-          is_move_safe["right"] = True
-
-          if my_neck["x"] < my_head["x"]:
+          if body_on_left == opponent_body["x"] and my_head[
+              "y"] == opponent_body["y"]:
             is_move_safe["left"] = False
-          elif my_neck["x"] > my_head["x"]:
+          if body_on_right == opponent_body["x"] and my_head[
+              "y"] == opponent_body["y"]:
             is_move_safe["right"] = False
-          elif my_neck["y"] < my_head["y"]:
-            is_move_safe["down"] = False
-          elif my_neck["y"] > my_head["y"]:
+          if my_head["x"] == opponent_body[
+              "x"] and body_on_top == opponent_body["y"]:
             is_move_safe["up"] = False
-
-        if my_head["x"] == opponent_head[
-            "x"] and expect_opponent_head_top == opponent_head["y"]:
-
-          is_move_safe["up"] = True
-
-          if my_neck["x"] < my_head["x"]:
+          if my_head["x"] == opponent_body[
+              "x"] and body_on_bottom == opponent_body["y"]:
+            is_move_safe["down"] = False
+          if body_on_left == opponent_head["x"] and my_head[
+              "y"] == opponent_head["y"]:
             is_move_safe["left"] = False
-          elif my_neck["x"] > my_head["x"]:
+          if body_on_right == opponent_head["x"] and my_head[
+              "y"] == opponent_head["y"]:
             is_move_safe["right"] = False
-          elif my_neck["y"] < my_head["y"]:
-            is_move_safe["down"] = False
-          elif my_neck["y"] > my_head["y"]:
+          if my_head["x"] == opponent_head[
+              "x"] and body_on_top == opponent_head["y"]:
             is_move_safe["up"] = False
-
-        if my_head["x"] == opponent_head[
-            "x"] and expect_opponent_head_bottom == opponent_head["y"]:
-
-          is_move_safe["down"] = True
-
-          if my_neck["x"] < my_head["x"]:
-            is_move_safe["left"] = False
-          elif my_neck["x"] > my_head["x"]:
-            is_move_safe["right"] = False
-          elif my_neck["y"] < my_head["y"]:
+          if my_head["x"] == opponent_head[
+              "x"] and body_on_bottom == opponent_head["y"]:
             is_move_safe["down"] = False
-          elif my_neck["y"] > my_head["y"]:
-            is_move_safe["up"] = False
-
-        if body_on_left == opponent_head["x"] and body_on_top == opponent_head[
-            "y"]:
-
-          is_move_safe["left"] = True
-          is_move_safe["up"] = True
-
-          if my_neck["x"] < my_head["x"]:
-            is_move_safe["left"] = False
-          elif my_neck["x"] > my_head["x"]:
-            is_move_safe["right"] = False
-          elif my_neck["y"] < my_head["y"]:
-            is_move_safe["down"] = False
-          elif my_neck["y"] > my_head["y"]:
-            is_move_safe["up"] = False
-
-        if body_on_left == opponent_head[
-            "x"] and body_on_bottom == opponent_head["y"]:
-
-          is_move_safe["left"] = True
-          is_move_safe["down"] = True
-
-          if my_neck["x"] < my_head["x"]:
-            is_move_safe["left"] = False
-          elif my_neck["x"] > my_head["x"]:
-            is_move_safe["right"] = False
-          elif my_neck["y"] < my_head["y"]:
-            is_move_safe["down"] = False
-          elif my_neck["y"] > my_head["y"]:
-            is_move_safe["up"] = False
-
-        if body_on_right == opponent_head[
-            "x"] and body_on_bottom == opponent_head["y"]:
-
-          is_move_safe["right"] = True
-          is_move_safe["down"] = True
-
-          if my_neck["x"] < my_head["x"]:
-            is_move_safe["left"] = False
-          elif my_neck["x"] > my_head["x"]:
-            is_move_safe["right"] = False
-          elif my_neck["y"] < my_head["y"]:
-            is_move_safe["down"] = False
-          elif my_neck["y"] > my_head["y"]:
-            is_move_safe["up"] = False
-
-        if body_on_right == opponent_head[
-            "x"] and body_on_top == opponent_head["y"]:
-          is_move_safe["right"] = True
-          is_move_safe["up"] = True
-
-          if my_neck["x"] < my_head["x"]:
-            is_move_safe["left"] = False
-          elif my_neck["x"] > my_head["x"]:
-            is_move_safe["right"] = False
-          elif my_neck["y"] < my_head["y"]:
-            is_move_safe["down"] = False
-          elif my_neck["y"] > my_head["y"]:
-            is_move_safe["up"] = False
 
   safe_moves = []
   for move, isSafe in is_move_safe.items():
@@ -424,11 +365,58 @@ def move(game_state: typing.Dict) -> typing.Dict:
   # TODO: Step 4 - Move towards food instead of random, to regain health and survive longer
 
   food = game_state['board']['food']
+  minimizing_turn_for_food = 100
+  minimizing_x_coordinate_food = 0
+  minimizing_y_coordinate_food = 0
 
-  print(safe_moves)
+  #if there are more than one safe move to choose, meaning it's safe to choose a random move. This finds the snake's minimizing turn needed to get the food, but this still considers 'living' or 'avoiding' as a higher priority.
+  if len(safe_moves) > 1:
+    for food_coordinate in food:
+      turns_needed_to_reach = abs(my_head["x"] - food_coordinate["x"]) + abs(
+        my_head["y"] - food_coordinate["y"])
+
+      if (minimizing_turn_for_food > turns_needed_to_reach):
+        minimizing_turn_for_food = turns_needed_to_reach
+        minimizing_x_coordinate_food = food_coordinate["x"]
+        minimizing_y_coordinate_food = food_coordinate["y"]
 
   if len(safe_moves) > 1:
-    print(999)
+    print(my_head["x"])
+    print(minimizing_x_coordinate_food)
+    print(my_head["y"])
+    print(minimizing_y_coordinate_food)
+    if my_head["x"] > minimizing_x_coordinate_food:
+      if is_move_safe["left"] == True:
+        is_move_safe = {
+          "up": False,
+          "down": False,
+          "left": True,
+          "right": False
+        }
+    elif my_head["x"] < minimizing_x_coordinate_food:
+      if is_move_safe["right"] == True:
+        is_move_safe = {
+          "up": False,
+          "down": False,
+          "left": False,
+          "right": True
+        }
+    elif my_head["y"] < minimizing_y_coordinate_food:
+      if is_move_safe["up"] == True:
+        is_move_safe = {
+          "up": True,
+          "down": False,
+          "left": False,
+          "right": False
+        }
+    elif my_head["y"] > minimizing_y_coordinate_food:
+      if is_move_safe["down"] == True:
+        is_move_safe = {
+          "up": False,
+          "down": True,
+          "left": False,
+          "right": False
+        }
 
   print(f"MOVE {game_state['turn']}: {next_move}")
   return {"move": next_move}
