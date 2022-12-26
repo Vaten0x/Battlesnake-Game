@@ -133,9 +133,6 @@ def move(game_state: typing.Dict) -> typing.Dict:
   body_on_top = my_head["y"] + 1
   body_on_bottom = my_head["y"] - 1
 
-  array_grid_width = (board_width)
-  array_grid_height = (board_height)
-
   for body in my_body:
     #Here it was just for testing, figuring out what the values are.
     #print(body)
@@ -169,7 +166,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
       opponent_head = avoid_others['head']
 
       #checks so if this is my snake or the opponent's snake, we already took methods on how to avoid our body, so we have to exclude it from this for loop
-      if opponent_head["x"] != my_head["x"] and opponent_head["y"] != my_head[
+      if opponent_head["x"] != my_head["x"] or opponent_head["y"] != my_head[
           "y"]:
 
         #testing
@@ -296,9 +293,24 @@ def move(game_state: typing.Dict) -> typing.Dict:
           elif my_neck["y"] > my_head["y"]:
             is_move_safe["up"] = False
 
+        if body_on_left == opponent_body["x"] and my_head[
+            "y"] == opponent_body["y"]:
+          is_move_safe["left"] = False
+
+        if body_on_right == opponent_body["x"] and my_head[
+            "y"] == opponent_body["y"]:
+          is_move_safe["right"] = False
+
+        if my_head["x"] == opponent_body["x"] and body_on_top == opponent_body[
+            "y"]:
+          is_move_safe["up"] = False
+
+        if my_head["x"] == opponent_body[
+            "x"] and body_on_bottom == opponent_body["y"]:
+          is_move_safe["down"] = False
+
         if expect_opponent_head_right == opponent_head["x"] and my_head[
             "y"] == opponent_head["y"]:
-
           is_move_safe["right"] = True
 
           if my_neck["x"] < my_head["x"]:
@@ -413,32 +425,10 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
   food = game_state['board']['food']
 
+  print(safe_moves)
+
   if len(safe_moves) > 1:
-    for coordinate_of_food in food:
-      print("moved for food")
-      if my_head["x"] < coordinate_of_food["x"] and is_move_safe[
-          "right"] == True:
-        is_move_safe["left"] == False
-        is_move_safe["right"] == False
-        is_move_safe["up"] == False
-        break
-      if my_head["x"] > coordinate_of_food["x"] and is_move_safe[
-          "left"] == True:
-        is_move_safe["right"] == False
-        is_move_safe["up"] == False
-        is_move_safe["down"] == False
-        break
-      if my_head["y"] > coordinate_of_food["y"] and is_move_safe[
-          "down"] == True:
-        is_move_safe["left"] == False
-        is_move_safe["right"] == False
-        is_move_safe["up"] == False
-        break
-      if my_head["y"] < coordinate_of_food["y"] and is_move_safe["up"] == True:
-        is_move_safe["left"] == False
-        is_move_safe["right"] == False
-        is_move_safe["down"] == False
-        break
+    print(999)
 
   print(f"MOVE {game_state['turn']}: {next_move}")
   return {"move": next_move}
