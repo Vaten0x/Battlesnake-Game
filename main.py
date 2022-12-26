@@ -67,6 +67,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
   board_width = game_state['board']['width']
   board_height = game_state['board']['height']
 
+  #you have to decrement them since we are trying to find the maximum board width and height where here these arrays gives the values from 1 to 12 if the board was 11 x 11. So, to find the max, we need to decrement them.
   board_width -= 1
   board_height -= 1
 
@@ -127,6 +128,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
   my_body = game_state['you']['body']
 
+  #these are some variables that can be used easier to implement in coding at the bottom with if then statements since it's easier to track which one to use since these all variables represents a point in terms of x or y. For example, body_on_left will represent the square on the left side of my snake's head. and other variables will be perpendicular to the head also. I found this easier to track.
   body_on_left = my_head["x"] - 1
   body_on_right = my_head["x"] + 1
 
@@ -137,15 +139,19 @@ def move(game_state: typing.Dict) -> typing.Dict:
     #Here it was just for testing, figuring out what the values are.
     #print(body)
 
+    #if my snake's body is on the left side, we have to avoid it by setting the move to the left is unsafe
     if body_on_left == body["x"] and my_head["y"] == body["y"]:
       is_move_safe["left"] = False
 
+    #if my snake's body is on the right side, we have to avoid it by setting the move to the right is unsafe
     if body_on_right == body["x"] and my_head["y"] == body["y"]:
       is_move_safe["right"] = False
 
+    #if my snake's body is on the top side, we have to avoid it by setting the move to the up is unsafe
     if my_head["x"] == body["x"] and body_on_top == body["y"]:
       is_move_safe["up"] = False
 
+    #if my snake's body is on the bottom side, we have to avoid it by setting the move to the down is unsafe
     if my_head["x"] == body["x"] and body_on_bottom == body["y"]:
       is_move_safe["down"] = False
 
@@ -158,8 +164,10 @@ def move(game_state: typing.Dict) -> typing.Dict:
   expect_opponent_head_top = my_head["x"] + 2
   expect_opponent_head_bottom = my_head["y"] - 2
 
+  #since there are many opponents, we need to go through one by one of every snake's body coordinates
   for avoid_others in opponents:
 
+    #now we seperate each snake's body coordinates into pieces in one by one, so we can check each of them
     for opponent_body in avoid_others['body']:
 
       #this is to avoid head to head collisions with other snakes
@@ -355,6 +363,7 @@ def move(game_state: typing.Dict) -> typing.Dict:
     if isSafe:
       safe_moves.append(move)
 
+  #if there are no safe moves left, we call out that we are going to make a risky move
   if len(safe_moves) == 0:
     print(f"MOVE {game_state['turn']}: No safe moves detected! Moving down")
     return {"move": "down"}
@@ -371,52 +380,46 @@ def move(game_state: typing.Dict) -> typing.Dict:
 
   #if there are more than one safe move to choose, meaning it's safe to choose a random move. This finds the snake's minimizing turn needed to get the food, but this still considers 'living' or 'avoiding' as a higher priority.
   if len(safe_moves) > 1:
+
+    #we check every food coordinates one by one:
     for food_coordinate in food:
+
+      #this is the equation for finding the distance between the two points, the head and the food. Here we used the absolute value function rather than using the square root or power to make the equation simpler
       turns_needed_to_reach = abs(my_head["x"] - food_coordinate["x"]) + abs(
         my_head["y"] - food_coordinate["y"])
 
       if (minimizing_turn_for_food > turns_needed_to_reach):
         minimizing_turn_for_food = turns_needed_to_reach
+        #we get the minimizing x and y coordinate of the food, so that we can track and let the snake eat them.
         minimizing_x_coordinate_food = food_coordinate["x"]
         minimizing_y_coordinate_food = food_coordinate["y"]
 
   if len(safe_moves) > 1:
-    print(my_head["x"])
-    print(minimizing_x_coordinate_food)
-    print(my_head["y"])
-    print(minimizing_y_coordinate_food)
-    if my_head["x"] > minimizing_x_coordinate_food:
-      if is_move_safe["left"] == True:
-        is_move_safe = {
-          "up": False,
-          "down": False,
-          "left": True,
-          "right": False
-        }
-    elif my_head["x"] < minimizing_x_coordinate_food:
-      if is_move_safe["right"] == True:
-        is_move_safe = {
-          "up": False,
-          "down": False,
-          "left": False,
-          "right": True
-        }
-    elif my_head["y"] < minimizing_y_coordinate_food:
-      if is_move_safe["up"] == True:
-        is_move_safe = {
-          "up": True,
-          "down": False,
-          "left": False,
-          "right": False
-        }
-    elif my_head["y"] > minimizing_y_coordinate_food:
-      if is_move_safe["down"] == True:
-        is_move_safe = {
-          "up": False,
-          "down": True,
-          "left": False,
-          "right": False
-        }
+    #for testing:
+    #print(my_head["x"])
+    #print(minimizing_x_coordinate_food)
+    #print(my_head["y"])
+    #print(minimizing_y_coordinate_food)
+
+    #if the nearest food is on the right side, we move right rather then going random move
+    if my_head["x"] > minimizing_x_coordinate_food and is_move_safe[
+        "left"] == True:
+      is_move_safe = {"up": False, "down": False, "left": True, "right": False}
+
+    #if the nearest food is on the right side, we move right rather then going random move
+    elif my_head["x"] < minimizing_x_coordinate_food and is_move_safe[
+        "right"] == True:
+      is_move_safe = {"up": False, "down": False, "left": False, "right": True}
+
+    #if the nearest food is on the top side, we move up rather then going random move
+    elif my_head["y"] < minimizing_y_coordinate_food and is_move_safe[
+        "up"] == True:
+      is_move_safe = {"up": True, "down": False, "left": False, "right": False}
+
+    #if the nearest food is on the bottom side, we move down rather then going random move
+    elif my_head["y"] > minimizing_y_coordinate_food and is_move_safe[
+        "down"] == True:
+      is_move_safe = {"up": False, "down": True, "left": False, "right": False}
 
   print(f"MOVE {game_state['turn']}: {next_move}")
   return {"move": next_move}
