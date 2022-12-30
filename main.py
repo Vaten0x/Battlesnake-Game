@@ -10,6 +10,7 @@
 # To get you started we've included code to prevent your Battlesnake from moving backwards.
 # For more info see docs.battlesnake.com
 
+
 import random
 import typing
 
@@ -460,3 +461,7 @@ if __name__ == "__main__":
   from server import run_server
 
   run_server({"info": info, "start": start, "move": move, "end": end})
+  
+  
+//Made by Jason Lee
+//Finished Dec 27th 2022
