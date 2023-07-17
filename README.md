@@ -8,4 +8,16 @@ An official Battlesnake template written in Python. Battlesnake is an autonomous
 
 This project uses [Python 3](https://www.python.org/) and [Flask](https://flask.palletsprojects.com/). It also comes with an optional [Dockerfile](https://docs.docker.com/engine/reference/builder/) to help with deployment.
 
+## Tournaments (Battlesnake Community Tournament: Second Chance Bracket)
+
+Check out this [link]https://www.youtube.com/watch?v=6T-pkF3ImsE&ab_channel=coreyja for my tournament I join to play with other battlesnakes! I was able to get into the finals but didn't win in the end, however I learned some mistakes I found from those games that I can do better on my coding!
+
+![Tournament]()
+
+## Achievements
+
+![My profile]()
+![Achievements]()
+
+## View some of the games that I played
 
