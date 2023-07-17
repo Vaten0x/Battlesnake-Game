@@ -2,11 +2,11 @@
 
 An official Battlesnake template written in Python. Battlesnake is an autonomous survival game popular among web developers. The objective is to keep the snake alive as it moves around the game board using Python 3 and Flask. Using Replit, I completed the introductory achievements to create my own battlesnake and competed in tournaments to test its capabilities against other players' battlesnakes. This project gave me a strong foundation in Python. Check out the [website](https://play.battlesnake.com) for more info.
 
-![Battlesnake Logo](https://media.battlesnake.com/social/StarterSnakeGitHubRepos_Python.png)
+## View some of the games that I played
 
-## Technologies Used
+[Game 1](https://play.battlesnake.com/game/0a9f4c4b-20f9-4a37-96e0-65503ae1146c?turn=0)
 
-This project uses [Python 3](https://www.python.org/) and [Flask](https://flask.palletsprojects.com/). It also comes with an optional [Dockerfile](https://docs.docker.com/engine/reference/builder/) to help with deployment.
+[Game 2](https://play.battlesnake.com/game/533599aa-3f8f-4ac4-a5f2-f1df2d5dcfa5?turn=0)
 
 ## Tournaments (Battlesnake Community Tournament: Second Chance Bracket)
 
@@ -19,8 +19,6 @@ Check out this [link](https://www.youtube.com/watch?v=6T-pkF3ImsE&ab_channel=cor
 ![My profile](Battlesnake_profile.png)
 ![Achievements](Battlesnake_Achievements.png)
 
-## View some of the games that I played
+## Technologies Used
 
-[Game 1](https://play.battlesnake.com/game/0a9f4c4b-20f9-4a37-96e0-65503ae1146c?turn=0)
-
-[Game 2](https://play.battlesnake.com/game/533599aa-3f8f-4ac4-a5f2-f1df2d5dcfa5?turn=0)
+This project uses [Python 3](https://www.python.org/) and [Flask](https://flask.palletsprojects.com/). It also comes with an optional [Dockerfile](https://docs.docker.com/engine/reference/builder/) to help with deployment.
