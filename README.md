@@ -21,5 +21,6 @@ Check out this [link](https://www.youtube.com/watch?v=6T-pkF3ImsE&ab_channel=cor
 
 ## View some of the games that I played
 
-[Game 1](https://play.battlesnake.com/game/533599aa-3f8f-4ac4-a5f2-f1df2d5dcfa5?turn=0)
-[Game 2](https://play.battlesnake.com/game/0a9f4c4b-20f9-4a37-96e0-65503ae1146c?turn=0)
+[Game 1](https://play.battlesnake.com/game/0a9f4c4b-20f9-4a37-96e0-65503ae1146c?turn=0)
+
+[Game 2](https://play.battlesnake.com/game/533599aa-3f8f-4ac4-a5f2-f1df2d5dcfa5?turn=0)
